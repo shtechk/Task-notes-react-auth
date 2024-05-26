@@ -1,7 +1,14 @@
+import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
+import { register } from "../api/auth";
 
 const Register = () => {
   const [userInfo, setUserInfo] = useState({});
+
+  const { mutate } = useMutation({
+    mutationKey: ["register"],
+    mutationFn: () => register(userInfo),
+  });
 
   const handleChange = (e) => {
     if (e.target.name === "image") {
@@ -12,8 +19,8 @@ const Register = () => {
   };
 
   const handleFormSubmit = (e) => {
-    // e.preventDefault();
-    // Add register logic here
+    e.preventDefault(); // this prevents the browser from refreshing
+    mutate();
   };
 
   return (
@@ -89,6 +96,7 @@ const Register = () => {
             <button
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+              onSubmit={handleFormSubmit} // in case user hits 'enter' instead of Register button
             >
               Register
             </button>
