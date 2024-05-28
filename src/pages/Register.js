@@ -1,13 +1,20 @@
 import { useMutation } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { register } from "../api/auth";
+import UserContext from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [userInfo, setUserInfo] = useState({});
-
+  const [user, setUser] = useContext(UserContext);
+  const navigate = useNavigate();
   const { mutate } = useMutation({
     mutationKey: ["register"],
     mutationFn: () => register(userInfo),
+    onSuccess: () => {
+      setUser(true);
+      navigate("/notes");
+    },
   });
 
   const handleChange = (e) => {
@@ -96,7 +103,7 @@ const Register = () => {
             <button
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-              onSubmit={handleFormSubmit} // in case user hits 'enter' instead of Register button
+              onSubmit={handleFormSubmit} // in case user hits 'enter' instead of Register button, the form will still react positively. this onSubmit is only used for forms.
             >
               Register
             </button>
